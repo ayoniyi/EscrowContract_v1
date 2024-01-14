@@ -1,29 +1,56 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
-contract BlueBird {
-    uint256 constant MAX_CHARACTER_AMOUNT = 140;
-    
-    // map wallet address to a string
-    //map indivividual addr to tweets
-    mapping(address => string) public tweets;
+contract Escrow {
+    enum State { AWAITING_PAYMENT, AWAITING_DELIVERY, COMPLETE }
 
-    //emit event
-    event NewTweet(address indexed user, string newTweet, uint256 timestamp);
+    State public currState;
 
-    function createTweet(string memory _tweet ) public {
-        require(bytes(_tweet).length <= MAX_CHARACTER_AMOUNT, "Tweet is way too long");
-        tweets[msg.sender] = _tweet;
-        emit NewTweet(msg.sender, _tweet, block.timestamp);
+    address payable admin; 
+    address public buyer;
+    address payable public seller;
+
+    modifier onlyBuyer() {
+        require(msg.sender == buyer, "Only buyer can call this method");
+        _;
     }
 
-    function getTweet(address _user) public view returns (string memory) {
-        string memory tweet = tweets[_user];
-        if (bytes(tweet).length == 0) {
-            return "No status set";
-        }else{
-            return tweet;
-        }
-        
+    modifier onlySeller() {
+        require(msg.sender == seller, "Only seller can call this method");
+        _;
+    }
+
+    modifier transactionNotCreated() {
+        require(buyer == address(0) && seller == payable(address(0)), "Transaction already created");
+        _;
+    }
+
+    constructor() {
+         admin = payable(msg.sender);
+    }
+
+    function createTransaction(address _buyer, address payable _seller) external transactionNotCreated {
+        require(_buyer != address(0) && _seller != address(0), "Invalid buyer or seller address");
+        buyer = _buyer;
+        seller = _seller;
+    }
+
+    function deposit() onlyBuyer external payable {
+        require(currState == State.AWAITING_PAYMENT, "Already paid");
+        currState = State.AWAITING_DELIVERY;
+    }
+
+    function confirmDelivery() onlyBuyer external {
+        require(currState == State.AWAITING_DELIVERY, "Cannot confirm delivery");
+         uint256 payment  = address(this).balance - 30000000000000000;
+        seller.transfer(payment);
+        admin.transfer(address(this).balance);
+       
+        currState = State.COMPLETE;
+    }
+
+    function getBalance(address _seller) public view returns (uint256) {
+        require(_seller == seller, "Invalid seller address");
+        return address(this).balance;
     }
 }

@@ -1,0 +1,2 @@
+clientid = e5bf706c5ec633250ab6f4b60e78d01e
+secret = OkZ7fsPrLEOPfmcVpBLwEKtCL67g-gsuLZRsqj_SnSnTqWvR3FbHemHZvKx7C2ZoCqxaw1Z3qY8bCqu4ozSBJg
