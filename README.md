@@ -1,47 +1,87 @@
-## Getting Started
+# Escrow Smart Contract
 
-Create a project using this example:
+A secure and transparent escrow smart contract built with Solidity and Foundry, designed to facilitate safe transactions between buyers and sellers.
+
+## Features
+
+- **Secure Payment Holding**: Safely holds buyer's payment until delivery is confirmed
+- **Role-Based Access Control**: Specific functions restricted to buyer and seller
+- **State Management**: Clear transaction states (Awaiting Payment → Awaiting Delivery → Complete)
+- **Admin Fee Management**: Automatically handles admin fees upon transaction completion
+
+## Contract Overview
+
+The smart contract implements the following key functionalities:
+
+- `createTransaction`: Initialize a new escrow transaction between a buyer and seller
+- `deposit`: Allow buyer to deposit payment into escrow
+- `confirmDelivery`: Release funds to seller upon delivery confirmation
+- `getBalance`: Check the current balance held in escrow
+
+## Prerequisites
+
+- [Foundry](https://book.getfoundry.sh/getting-started/installation.html)
+- [Node.js](https://nodejs.org/) (v14 or higher)
+- [Yarn](https://yarnpkg.com/) or [npm](https://www.npmjs.com/)
+
+## Installation
+
+1. Clone the repository:
 
 ```bash
-npx thirdweb create --contract --template forge-starter
+git clone <repository-url>
+cd EscrowContract_v1
 ```
 
-You can start editing the page by modifying `contracts/Contract.sol`.
-
-To add functionality to your contracts, you can use the `@thirdweb-dev/contracts` package which provides base contracts and extensions to inherit. The package is already installed with this project. Head to our [Contracts Extensions Docs](https://portal.thirdweb.com/thirdweb-deploy/contract-extensions) to learn more.
-
-## Building the project
-
-After any changes to the contract, run:
+2. Install dependencies:
 
 ```bash
-npm run build
+yarn install
 # or
+npm install
+```
+
+## Building the Project
+
+Compile the smart contracts using:
+
+```bash
 yarn build
+# or
+npm run build
 ```
 
-to compile your contracts. This will also detect the [Contracts Extensions Docs](https://portal.thirdweb.com/thirdweb-deploy/contract-extensions) detected on your contract.
+## Testing
 
-## Deploying Contracts
-
-When you're ready to deploy your contracts, just run one of the following command to deploy you're contracts:
+Run the test suite using Foundry:
 
 ```bash
-npm run deploy
-# or
+forge test
+```
+
+## Deployment
+
+Deploy your contract to the blockchain:
+
+```bash
 yarn deploy
+# or
+npm run deploy
 ```
 
-## Releasing Contracts
+## Release
 
-If you want to release a version of your contracts publicly, you can use one of the followings command:
+Create a public release of your contract:
 
 ```bash
-npm run release
-# or
 yarn release
+# or
+npm run release
 ```
 
-## Join our Discord!
+## Security Considerations
 
-For any questions, suggestions, join our discord at [https://discord.gg/thirdweb](https://discord.gg/thirdweb).
+- The contract includes role-based access control
+- State transitions are strictly controlled
+- Admin fee is automatically handled
+- Basic input validation is implemented
